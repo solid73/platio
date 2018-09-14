@@ -1,0 +1,25 @@
+{
+  "name": "platio",
+  "version": "0.1.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjkz808/platio.git"
+  },
+  "author": "Nikolai Kornilov (https://facebook.com/k.kornilov01)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjkz808/platio/issues"
+  },
+  "homepage": "https://github.com/rjkz808/platio#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^1.12.0"
+  }
+}
