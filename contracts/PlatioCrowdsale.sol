@@ -8,7 +8,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
 
 /**
  * @title Platio Token
- * @author Nikolai Kornilov
  */
 contract PlatioCrowdsale is 
   CappedCrowdsale, 
@@ -27,7 +26,7 @@ contract PlatioCrowdsale is
   public
   Crowdsale(_rate, _wallet, _token)
   CappedCrowdsale(_cap)
-  TimedCrowdsale(_startTime, _closingTime)
+  TimedCrowdsale(_startTime, _endTime)
   RefundableCrowdsale(_goal)
  {
   require(_goal <= _cap);
