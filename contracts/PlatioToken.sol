@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/StandardBurnableToken.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
@@ -9,9 +9,13 @@ import "openzeppelin-solidity/contracts/ownership/Contactable.sol";
  * @title Platio Token
  */
 contract PlatioToken is StandardBurnableToken, DetailedERC20, Contactable {
-  uint public constant limit = 39750000;
+  uint public limit;
+  address public minter;
 
   constructor() public DetailedERC20("Platio Token", "PGAS", 4) {
+    totalSupply_ = 397500000 * (10 ** uint(decimals));
+    limit = totalSupply_.div(100).mul(10);
+    balances[owner] = totalSupply_;
   }
 
   function calculateFee(uint _value) public pure returns (uint) {
@@ -72,12 +76,21 @@ contract PlatioToken is StandardBurnableToken, DetailedERC20, Contactable {
     return super.burnFrom(_from, _value);
   }
 
+  function transferRefundedTokens(address _from) public {
+    require(msg.sender == minter);
+    uint value = balances[_from];
+    balances[owner] = balances[owner].add(value);
+    balances[_from] = 0;
+    emit Transfer(_from, owner, value);
+  }
+
+  function setMinter(address _minter) public onlyOwner {
+    require(_minter != address(0));
+    minter = _minter;
+  }
+
   function _fee(address _from, uint _value) internal returns (bool) {
-    if (
-      totalSupply().
-      sub(calculateFee(_value).div(2)) >= calculateFee(_value).div(2)
-    )
-    {
+    if (totalSupply().sub(calculateFee(_value).div(2)) >= limit) {
       if (_from == msg.sender) {
         require(_value.add(calculateFee(_value)) <= balanceOf(_from));
         _burn(_from, calculateFee(_value).div(2));
